@@ -1,0 +1,12 @@
+# IDE
+.idea/
+.vs/
+
+# Build
+Binaries/
+Intermediate/
+
+# Project Files
+*.sln
+*.vcxproj
+*.vcxproj.*
