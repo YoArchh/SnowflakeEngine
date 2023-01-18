@@ -35,6 +35,8 @@ namespace Snowflake
         void Start();
         void Close();
 
+        static Application& GetInstance() { return *s_Instance; }
+
         bool IsRunning() { return bIsRunning; }
     private:
         static Application* s_Instance;

@@ -6,6 +6,9 @@
 Binaries/
 Intermediate/
 
+# Snowflake Engine
+Logs/
+
 # Project Files
 *.sln
 *.vcxproj

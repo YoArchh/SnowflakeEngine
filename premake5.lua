@@ -1,3 +1,5 @@
+include "Dependencies.lua"
+
 workspace "Snowflake Engine"
     architecture "x86_64"
     startproject "Snowflake Editor"
@@ -42,7 +44,9 @@ group "Core"
         includedirs
         {
             "%{prj.name}/Source",
-            "%{prj.name}/Source/Runtime"
+            "%{prj.name}/Source/Runtime",
+            
+            "%{IncludeDir.spdlog}"
         }
 
         filter "system:windows"

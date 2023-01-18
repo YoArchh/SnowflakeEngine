@@ -7,13 +7,10 @@ namespace Snowflake
     class SnowflakeEditorApp : public Application
     {
     public:
-        SnowflakeEditorApp(ApplicationSpecification& AppSpecification)
+        SnowflakeEditorApp(const ApplicationSpecification& AppSpecification)
             : Application(AppSpecification) {}
 
-        void OnInitialize() override
-        {
-            std::cout << "Welcome to Snowflake Engine!" << std::endl;
-        }
+        void OnInitialize() override {}
     };
 
     Application* CreateApplication(ApplicationCommandLineArguments CommandLineArguments)
