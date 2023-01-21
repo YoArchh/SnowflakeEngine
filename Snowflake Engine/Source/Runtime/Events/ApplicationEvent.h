@@ -31,10 +31,11 @@ namespace Snowflake
     class WindowMinimizeEvent : public Event
     {
     public:
-       WindowMinimizeEvent(const std::string& WindowTitle)
-           : m_WindowTitle(WindowTitle) {}
+       WindowMinimizeEvent(const std::string& WindowTitle, bool bIsWindowMinimized)
+           : m_WindowTitle(WindowTitle), bIsMinimized(bIsWindowMinimized) {}
 
         inline std::string GetWindowTitle() const { return m_WindowTitle; }
+        inline bool IsWindowMinimized() const { return bIsMinimized; }
 
         std::string ToString() const override
         {
@@ -48,6 +49,7 @@ namespace Snowflake
         
     private:
         std::string m_WindowTitle;
+        bool bIsMinimized;
     };
 
     class WindowResizeEvent : public Event

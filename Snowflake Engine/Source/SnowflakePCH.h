@@ -19,6 +19,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Runtime/Core/Assertion.h"
+
 #ifdef SNOWFLAKE_PLATFORM_WIN64
     #include <windows.h>
     #include <winuser.h>

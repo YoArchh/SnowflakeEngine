@@ -30,6 +30,8 @@ namespace Snowflake
         template<typename ... Args>
         static void PrintMessageWithTag(bool bLoggingFromEngine, LogLevel InLogLevel, std::string_view Tag, Args&& ... Arguments);
 
+        template<typename ... Args>
+        static void PrintAssertMessage(bool bLoggingFromEngine, std::string_view Prefix, Args&& ... Arguments);
     private:
         Ref<spdlog::logger> m_Logger;
         
@@ -118,6 +120,20 @@ namespace Snowflake
                 break;
             }
         }
+    }
+
+    template <typename ... Args>
+    void Logger::PrintAssertMessage(bool bLoggingFromEngine, std::string_view Prefix, Args&&... Arguments)
+    {
+        auto Logger = bLoggingFromEngine ? LoggingSystem::GetEngineLogger() : LoggingSystem::GetClientLogger();
+        Logger->error("{0}: {1}", Prefix, fmt::format(std::forward<Args>(Arguments)...));
+    }
+
+    template <>
+    inline void Logger::PrintAssertMessage(bool bLoggingFromEngine, std::string_view Prefix)
+    {
+        auto Logger = bLoggingFromEngine ? LoggingSystem::GetEngineLogger() : LoggingSystem::GetClientLogger();
+        Logger->error("{0}", Prefix);
     }
 }
 

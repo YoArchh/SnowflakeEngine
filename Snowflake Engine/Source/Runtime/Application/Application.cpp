@@ -18,18 +18,16 @@ namespace Snowflake
         
         LoggingSystem::Initialize();
 
-        ENGINE_LOG_INFO("Welcome to Snowflake Engine!");
-
-        // Event System Test
-        WindowResizeEvent ResizeEvent(1600, 900);
-        ENGINE_LOG_INFO_TAG("Event", ResizeEvent.ToString());
-
-        ApplicationUpdateEvent AppUpdateEvent(AppSpecification.Name);
-        CLIENT_LOG_INFO_TAG("Event", AppUpdateEvent.ToString());
+        m_ApplicationWindow = Window::CreateWindow();
+        m_ApplicationWindow->Initialize();
+        m_ApplicationWindow->SetEventCallbackFunction([this](Event& InEvent) { OnEvent(InEvent); });
+        m_ApplicationWindow->CenterWindow();
     }
 
     Application::~Application()
     {
+        m_ApplicationWindow->SetEventCallbackFunction([](Event&) {});
+        
         LoggingSystem::Shutdown();
     }
 
@@ -39,11 +37,16 @@ namespace Snowflake
         
         while (bIsRunning)
         {
-            DispatchEvent<ApplicationUpdateEvent, true>(m_Specification.Name);
+            DispatchEvent<ApplicationUpdateEvent>(m_Specification.Name);
             
             ProcessEvents();
 
-            DispatchEvent<ApplicationTickEvent, true>(m_Specification.Name);
+            if (!bIsWindowMinimized)
+            {
+                m_ApplicationWindow->SwapBuffers();
+            }
+            
+            DispatchEvent<ApplicationTickEvent>(m_Specification.Name);
         }
 
         OnShutdown();
@@ -68,18 +71,36 @@ namespace Snowflake
     void Application::OnEvent(Event& InEvent)
     {
         EventDispatcher Dispatcher(InEvent);
-
+        Dispatcher.Dispatch<WindowCloseEvent>([this](WindowCloseEvent& Event) { return OnWindowClose(Event); });
+        Dispatcher.Dispatch<WindowMinimizeEvent>([this](WindowMinimizeEvent& Event) { return OnWindowMinimize(Event); });
+        
         for (auto& EventCallback : m_EventCallbacks)
         {
-            EventCallback(InEvent);
-
             if (InEvent.bHandled)
-                break;
+                continue;
+            
+            EventCallback(InEvent);
         }
+    }
+
+    bool Application::OnWindowClose(WindowCloseEvent& Event)
+    {
+        Close();
+
+        return true;
+    }
+
+    bool Application::OnWindowMinimize(WindowMinimizeEvent& Event)
+    {
+        bIsWindowMinimized = Event.IsWindowMinimized();
+
+        return true;
     }
 
     void Application::ProcessEvents()
     {
+        m_ApplicationWindow->ProcessEvents();
+        
         // Template arguments are deduced automatically, no need to write them explicitly.
         std::scoped_lock Lock(m_EventQueueMutex);
 

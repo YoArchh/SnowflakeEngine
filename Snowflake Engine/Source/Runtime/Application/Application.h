@@ -3,7 +3,9 @@
 #include "Core/Core.h"
 #include "Core/CoreTypes.h"
 
-#include "Events/Event.h"
+#include "Events/ApplicationEvent.h"
+
+#include "Window.h"
 
 #include <string>
 #include <mutex>
@@ -30,6 +32,8 @@ namespace Snowflake
     
     class SNOWFLAKE_API Application
     {
+        using EventCallbackFunction = std::function<void(Event&)>;
+        
     public:
         Application(const ApplicationSpecification& AppSpecification);
         virtual ~Application();
@@ -72,16 +76,21 @@ namespace Snowflake
 
     private:
         void ProcessEvents();
-        
+
+        bool OnWindowClose(WindowCloseEvent& Event);
+        bool OnWindowMinimize(WindowMinimizeEvent& Event);
     private:
         static Application* s_Instance;
 
+        Scope<Window> m_ApplicationWindow;
+
         std::mutex m_EventQueueMutex;
         std::queue<std::function<void()>> m_EventQueue;
-        std::vector<std::function<void(Event&)>> m_EventCallbacks;
+        std::vector<EventCallbackFunction> m_EventCallbacks;
 
         ApplicationSpecification m_Specification;
-        
+
+        bool bIsWindowMinimized = false;
         bool bIsRunning = true;
     };
 

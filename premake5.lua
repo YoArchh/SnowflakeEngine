@@ -19,6 +19,10 @@ workspace "Snowflake Engine"
 BinariesDir = "%{wks.location}/Binaries/%{prj.name}/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IntermediateDir = "!%{wks.location}/Intermediate/%{prj.name}/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+group "Dependencies"
+    include "Snowflake Engine/ThirdParty/GLFW"
+group ""
+
 group "Core"
     project "Snowflake Engine"
         location "Snowflake Engine"
@@ -38,7 +42,10 @@ group "Core"
         files
         {
             "%{prj.name}/Source/**.cpp",
-            "%{prj.name}/Source/**.h"
+            "%{prj.name}/Source/**.h",
+            
+            "%{IncludeDir.stb_image}/*.cpp",
+            "%{IncludeDir.stb_image}/*.h"
         }
 
         includedirs
@@ -46,7 +53,16 @@ group "Core"
             "%{prj.name}/Source",
             "%{prj.name}/Source/Runtime",
             
-            "%{IncludeDir.spdlog}"
+            "%{IncludeDir.spdlog}",
+            "%{IncludeDir.GLFW}",
+            "%{IncludeDir.stb_image}"
+        }
+
+        links
+        {
+            "GLFW",
+            
+            "opengl32.lib"
         }
 
         filter "system:windows"
