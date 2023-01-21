@@ -8,6 +8,8 @@
 
 #include "Layers/LayerStack.h"
 
+#include "ImGui/ImGuiLayer.h"
+
 #include <string>
 #include <mutex>
 #include <queue>
@@ -79,6 +81,8 @@ namespace Snowflake
 
         static Application& GetInstance() { return *s_Instance; }
 
+        Window& GetWindow() { return *m_ApplicationWindow; }
+
         bool IsRunning() { return bIsRunning; }
 
     private:
@@ -91,6 +95,8 @@ namespace Snowflake
         static Application* s_Instance;
 
         Scope<Window> m_ApplicationWindow;
+
+        ImGuiLayer* m_ImGuiLayer;
 
         std::mutex m_EventQueueMutex;
         std::queue<std::function<void()>> m_EventQueue;

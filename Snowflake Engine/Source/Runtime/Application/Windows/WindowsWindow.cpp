@@ -6,6 +6,7 @@
 #include "Events/ApplicationEvent.h"
 
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 #include <stb_image.h>
 
 namespace Snowflake
@@ -73,6 +74,9 @@ namespace Snowflake
         }
 
         glfwMakeContextCurrent(m_WindowHandle);
+
+        int GladInitSuccess = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+        ENGINE_ASSERT(GladInitSuccess, "Failed to create window '" + m_WindowData.Title + "'! Failed to create OpenGL context!")
         
         SetVSync(m_Specification.bEnableVSync);
         
@@ -206,13 +210,13 @@ namespace Snowflake
             {
                 case GLFW_TRUE:
                 {
-                    WindowFocusEvent WindowFocus(true);
+                    WindowFocusEvent WindowFocus(static_cast<bool>(Focused));
                     Data.EventCallback(WindowFocus);
                     break;
                 }
                 case GLFW_FALSE:
                 {
-                    WindowLostFocusEvent WindowLostFocus(true);
+                    WindowLostFocusEvent WindowLostFocus(static_cast<bool>(Focused));
                     Data.EventCallback(WindowLostFocus);
                     break;
                 }

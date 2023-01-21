@@ -21,6 +21,8 @@ IntermediateDir = "!%{wks.location}/Intermediate/%{prj.name}/%{cfg.buildcfg}-%{c
 
 group "Dependencies"
     include "Snowflake Engine/ThirdParty/GLFW"
+    include "Snowflake Engine/ThirdParty/Glad"
+    include "Snowflake Engine/ThirdParty/ImGui"
 group ""
 
 group "Core"
@@ -55,14 +57,23 @@ group "Core"
             
             "%{IncludeDir.spdlog}",
             "%{IncludeDir.GLFW}",
+            "%{IncludeDir.Glad}",
+            "%{IncludeDir.ImGui}",
             "%{IncludeDir.stb_image}"
         }
 
         links
         {
             "GLFW",
+            "Glad",
+            "ImGui",
             
             "opengl32.lib"
+        }
+
+        defines
+        {
+            "GLFW_INCLUDE_NONE"
         }
 
         filter "system:windows"
@@ -126,7 +137,8 @@ group "Tools"
             "Snowflake Engine/Source",
             "Snowflake Engine/Source/Runtime",
             
-            "%{IncludeDir.spdlog}"
+            "%{IncludeDir.spdlog}",
+            "%{IncludeDir.ImGui}"
         }
 
         links

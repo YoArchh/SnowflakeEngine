@@ -14,6 +14,7 @@ namespace Snowflake
         virtual void OnDetach() {}
         virtual void OnUpdate() {}
         virtual void OnTick() {}
+        virtual void OnUIRender() {}
         virtual void OnEvent(Event& InEvent) {}
 
         inline const std::string& GetName() const { return m_Name; }

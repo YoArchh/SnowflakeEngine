@@ -5,6 +5,8 @@
 
 #include "Events/ApplicationEvent.h"
 
+#include <glad/glad.h>
+
 extern bool bIsApplicationRunning;
 
 namespace Snowflake
@@ -22,6 +24,9 @@ namespace Snowflake
         m_ApplicationWindow->Initialize();
         m_ApplicationWindow->SetEventCallbackFunction([this](Event& InEvent) { OnEvent(InEvent); });
         m_ApplicationWindow->CenterWindow();
+
+        m_ImGuiLayer = ImGuiLayer::Create();
+        PushOverlay(m_ImGuiLayer);
     }
 
     Application::~Application()
@@ -45,14 +50,38 @@ namespace Snowflake
         {
             ProcessEvents();
 
+            glClearColor(0.45f, 0.55f, 0.65f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+
             if (!bIsWindowMinimized)
             {
+                /*----------------*/
+                /* -- Updating -- */
+                /*----------------*/
+                
                 for (Layer* InLayer : m_LayerStack)
                     InLayer->OnUpdate();
 
                 DispatchEvent<ApplicationUpdateEvent, true>(m_Specification.Name);
+
+                /*-----------------*/
+                /* -- Rendering -- */
+                /*-----------------*/
+
+                m_ImGuiLayer->Begin();
+
+                for (Layer* InLayer : m_LayerStack)
+                    InLayer->OnUIRender();
+
+                m_ImGuiLayer->End();
+
+                DispatchEvent<ApplicationRenderEvent, true>(m_Specification.Name);
                 
                 m_ApplicationWindow->SwapBuffers();
+
+                /*---------------*/
+                /* -- Ticking -- */
+                /*---------------*/
 
                 for (Layer* InLayer : m_LayerStack)
                     InLayer->OnTick();
