@@ -29,6 +29,7 @@ namespace Snowflake
 
         template<typename ... Args>
         static void PrintMessageWithTag(bool bLoggingFromEngine, LogLevel InLogLevel, std::string_view Tag, Args&& ... Arguments);
+
     private:
         Ref<spdlog::logger> m_Logger;
         

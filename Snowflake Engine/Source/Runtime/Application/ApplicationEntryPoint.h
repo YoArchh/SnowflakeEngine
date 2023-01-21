@@ -4,13 +4,18 @@
 
 extern Snowflake::Application* Snowflake::CreateApplication(ApplicationCommandLineArguments CommandLineArguments);
 
+bool bIsApplicationRunning = true;
+
 namespace Snowflake
 {
     int Main(int ArgsCount, char** Args)
     {
-        Application* App = CreateApplication({ ArgsCount, Args });
-        App->Start();
-        delete App;
+        while (bIsApplicationRunning)
+        {
+            Application* App = CreateApplication({ ArgsCount, Args });
+            App->Start();
+            delete App;
+        }
         
         return 0;
     }

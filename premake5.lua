@@ -22,7 +22,7 @@ IntermediateDir = "!%{wks.location}/Intermediate/%{prj.name}/%{cfg.buildcfg}-%{c
 group "Core"
     project "Snowflake Engine"
         location "Snowflake Engine"
-        kind "SharedLib"
+        kind "StaticLib"
         language "C++"
         cppdialect "C++20"
         staticruntime "Off"
@@ -115,12 +115,7 @@ group "Tools"
         {
             "Snowflake Engine"
         }
-
-        postbuildcommands
-        {
-            '{COPYFILE} "%{wks.location}/Binaries/Snowflake Engine/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/SnowflakeEngine.dll" "%{cfg.targetdir}"'
-        }
-
+        
         filter "system:windows"
             systemversion "latest"
             
