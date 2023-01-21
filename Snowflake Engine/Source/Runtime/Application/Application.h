@@ -1,11 +1,12 @@
 ﻿#pragma once
 
-#include "Core/Core.h"
 #include "Core/CoreTypes.h"
 
 #include "Events/ApplicationEvent.h"
 
 #include "Window.h"
+
+#include "Layers/LayerStack.h"
 
 #include <string>
 #include <mutex>
@@ -30,7 +31,7 @@ namespace Snowflake
         ApplicationCommandLineArguments CommandLineArguments;
     };
     
-    class SNOWFLAKE_API Application
+    class Application
     {
         using EventCallbackFunction = std::function<void(Event&)>;
         
@@ -70,6 +71,12 @@ namespace Snowflake
             }
         }
 
+        void PushLayer(Layer* InLayer);
+        void PushOverlay(Layer* Overlay);
+
+        void PopLayer(Layer* InLayer);
+        void PopOverlay(Layer* Overlay);
+
         static Application& GetInstance() { return *s_Instance; }
 
         bool IsRunning() { return bIsRunning; }
@@ -79,6 +86,7 @@ namespace Snowflake
 
         bool OnWindowClose(WindowCloseEvent& Event);
         bool OnWindowMinimize(WindowMinimizeEvent& Event);
+        
     private:
         static Application* s_Instance;
 
@@ -87,9 +95,10 @@ namespace Snowflake
         std::mutex m_EventQueueMutex;
         std::queue<std::function<void()>> m_EventQueue;
         std::vector<EventCallbackFunction> m_EventCallbacks;
-
+        
         ApplicationSpecification m_Specification;
-
+        LayerStack m_LayerStack;
+        
         bool bIsWindowMinimized = false;
         bool bIsRunning = true;
     };

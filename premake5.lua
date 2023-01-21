@@ -124,7 +124,9 @@ group "Tools"
             "%{prj.name}/Source",
             
             "Snowflake Engine/Source",
-            "Snowflake Engine/Source/Runtime"
+            "Snowflake Engine/Source/Runtime",
+            
+            "%{IncludeDir.spdlog}"
         }
 
         links

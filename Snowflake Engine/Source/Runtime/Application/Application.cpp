@@ -27,6 +27,12 @@ namespace Snowflake
     Application::~Application()
     {
         m_ApplicationWindow->SetEventCallbackFunction([](Event&) {});
+
+        for (Layer* InLayer : m_LayerStack)
+        {
+            InLayer->OnDetach();
+            delete InLayer;
+        }
         
         LoggingSystem::Shutdown();
     }
@@ -37,16 +43,22 @@ namespace Snowflake
         
         while (bIsRunning)
         {
-            DispatchEvent<ApplicationUpdateEvent>(m_Specification.Name);
-            
             ProcessEvents();
 
             if (!bIsWindowMinimized)
             {
+                for (Layer* InLayer : m_LayerStack)
+                    InLayer->OnUpdate();
+
+                DispatchEvent<ApplicationUpdateEvent, true>(m_Specification.Name);
+                
                 m_ApplicationWindow->SwapBuffers();
-            }
+
+                for (Layer* InLayer : m_LayerStack)
+                    InLayer->OnTick();
             
-            DispatchEvent<ApplicationTickEvent>(m_Specification.Name);
+                DispatchEvent<ApplicationTickEvent, true>(m_Specification.Name);
+            }
         }
 
         OnShutdown();
@@ -74,6 +86,16 @@ namespace Snowflake
         Dispatcher.Dispatch<WindowCloseEvent>([this](WindowCloseEvent& Event) { return OnWindowClose(Event); });
         Dispatcher.Dispatch<WindowMinimizeEvent>([this](WindowMinimizeEvent& Event) { return OnWindowMinimize(Event); });
         
+        for (auto Iterator = m_LayerStack.end(); Iterator != m_LayerStack.begin(); )
+        {
+            (*--Iterator)->OnEvent(InEvent);
+            if (InEvent.bHandled)
+                break;
+        }
+        
+        if (InEvent.bHandled)
+            return;
+        
         for (auto& EventCallback : m_EventCallbacks)
         {
             if (InEvent.bHandled)
@@ -81,6 +103,26 @@ namespace Snowflake
             
             EventCallback(InEvent);
         }
+    }
+
+    void Application::PushLayer(Layer* InLayer)
+    {
+        m_LayerStack.PushLayer(InLayer);
+    }
+
+    void Application::PushOverlay(Layer* Overlay)
+    {
+        m_LayerStack.PushOverlay(Overlay);
+    }
+
+    void Application::PopLayer(Layer* InLayer)
+    {
+        m_LayerStack.PopLayer(InLayer);
+    }
+
+    void Application::PopOverlay(Layer* Overlay)
+    {
+        m_LayerStack.PopOverlay(Overlay);
     }
 
     bool Application::OnWindowClose(WindowCloseEvent& Event)
