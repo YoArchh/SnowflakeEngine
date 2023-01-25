@@ -39,6 +39,9 @@ namespace Snowflake
         inline void* GetHandle() const override { return m_WindowHandle; }
 
     private:
+        static void JoystickCallback(int JoystickID, int Event);
+        
+    private:
         struct WindowData
         {
             std::string Title = "Snowflake Engine";
@@ -52,7 +55,7 @@ namespace Snowflake
             EventCallbackFunction EventCallback;
         };
         
-        GLFWwindow* m_WindowHandle = nullptr;
+        static GLFWwindow* m_WindowHandle;
         WindowSpecification m_Specification;
         WindowData m_WindowData;
     };

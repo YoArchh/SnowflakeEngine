@@ -11,6 +11,7 @@ namespace Snowflake
 
         KeyPressed, KeyReleased, KeyTyped,
         MouseButtonPressed, MouseButtonReleased, MouseScrolled, MouseMoved,
+        GamepadConnected, GamepadDisconnected,
         WindowClose, WindowMinimize, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
         ApplicationUpdate, ApplicationRender, ApplicationTick
     };
@@ -23,7 +24,8 @@ namespace Snowflake
         InputEventCategory = 1u << 1,
         KeyboardEventCategory = 1u << 2,
         MouseEventCategory = 1u << 3,
-        MouseButtonEventCategory = 1u << 4
+        MouseButtonEventCategory = 1u << 4,
+        GamepadEventCategory = 1u << 5
     };
 
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type; }\

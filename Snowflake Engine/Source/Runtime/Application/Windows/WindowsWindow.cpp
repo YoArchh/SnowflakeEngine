@@ -4,6 +4,7 @@
 #include "Events/KeyboardEvent.h"
 #include "Events/MouseEvent.h"
 #include "Events/ApplicationEvent.h"
+#include "Events/GamepadEvent.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -11,6 +12,8 @@
 
 namespace Snowflake
 {
+    GLFWwindow* WindowsWindow::m_WindowHandle = nullptr;
+    
     static bool bIsGLFWInitialized = false;
     
     WindowsWindow::WindowsWindow(const WindowSpecification& Specification)
@@ -175,6 +178,8 @@ namespace Snowflake
             MouseMovedEvent MouseMoved(static_cast<float>(XPosition), static_cast<float>(YPosition));
             Data.EventCallback(MouseMoved);
         });
+
+        glfwSetJoystickCallback(WindowsWindow::JoystickCallback);
         
         glfwSetWindowCloseCallback(m_WindowHandle, [](GLFWwindow* Window)
         {
@@ -283,5 +288,26 @@ namespace Snowflake
         glfwSetWindowTitle(m_WindowHandle, Title.c_str());
         
         m_WindowData.Title = Title;
+    }
+
+    void WindowsWindow::JoystickCallback(int JoystickID, int Event)
+    {
+        auto& Data = *static_cast<WindowData*>(glfwGetWindowUserPointer(m_WindowHandle));
+
+        switch (Event)
+        {
+            case GLFW_CONNECTED:
+            {
+                GamepadConnectedEvent GamepadConnected(glfwGetGamepadName(JoystickID), JoystickID);
+                Data.EventCallback(GamepadConnected);
+                break;
+            }
+            case GLFW_DISCONNECTED:
+            {
+                GamepadDisconnectedEvent GamepadDisconnected(JoystickID);
+                Data.EventCallback(GamepadDisconnected);
+                break;
+            }
+        }
     }
 }
