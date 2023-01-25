@@ -136,6 +136,7 @@ group "Tools"
             
             "Snowflake Engine/Source",
             "Snowflake Engine/Source/Runtime",
+            "Snowflake Engine/Source/Runtime/Core",
             
             "%{IncludeDir.spdlog}",
             "%{IncludeDir.ImGui}"

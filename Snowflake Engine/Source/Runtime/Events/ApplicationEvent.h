@@ -141,11 +141,7 @@ namespace Snowflake
     private:
         int m_XPosition, m_YPosition;
     };
-
-    /*-------------------------------------------------------------------------------------*/
-    /* -- TODO: Maybe take in an instance to an Appliction in the constructors instead? -- */
-    /*-------------------------------------------------------------------------------------*/
-
+    
     class ApplicationUpdateEvent : public Event
     {
     public:
