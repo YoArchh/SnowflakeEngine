@@ -99,23 +99,24 @@ namespace Snowflake
 
         const char* ShaderTypeToken = "#type";
         size_t ShaderTypeTokenLength = strlen(ShaderTypeToken);
-        size_t Pos = ShaderSource.find(ShaderTypeToken, 0);
+        size_t Pos = ShaderSource.find(ShaderTypeToken, 0); // Start of shader type declaration line
         while (Pos != std::string::npos)
         {
-            size_t EOL = ShaderSource.find_first_of("\r\n", Pos);
-            ENGINE_ASSERT(EOL != std::string::npos, "Failed to pre-process shader! Syntax error!")
+            size_t EOL = ShaderSource.find_first_of("\r\n", Pos); // End of shader type declaration line
+            ENGINE_ASSERT(EOL != std::string::npos, "Syntax error")
+            
+            size_t Begin = Pos + ShaderTypeTokenLength + 1; // Start of shader type name (after "#type " keyword)
+            std::string ShaderType = ShaderSource.substr(Begin, EOL - Begin);
+            ENGINE_ASSERT(ShaderUtils::GetShaderTypeFromString(ShaderType), "Invalid shader type specified")
 
-            size_t Begin = Pos + ShaderTypeTokenLength + 1;
-            std::string ShaderType = ShaderSource.substr(Begin, Begin - EOL);
-            ENGINE_ASSERT(ShaderUtils::GetShaderTypeFromString(ShaderType), "Failed to pre-process shader! Invalid shader type!")
+            size_t NextLinePos = ShaderSource.find_first_not_of("\r\n", EOL); // Start of shader code after shader type declaration line
+            ENGINE_ASSERT(NextLinePos != std::string::npos, "Syntax error")
+            Pos = ShaderSource.find(ShaderTypeToken, NextLinePos); // Start of next shader type declaration line
 
-            size_t NextLinePos = ShaderSource.find_first_not_of("\r\n", EOL);
-            ENGINE_ASSERT(NextLinePos != std::string::npos, "Failed to pre-process shader! Syntax error!")
-
-            ShaderSources[ShaderUtils::GetShaderTypeFromString(ShaderType)] = Pos == std::string::npos ? ShaderSource.substr(NextLinePos)
-                                                                            : ShaderSource.substr(NextLinePos, Pos - NextLinePos);
+            ShaderSources[ShaderUtils::GetShaderTypeFromString(ShaderType)] = (Pos == std::string::npos) ? ShaderSource.substr(NextLinePos) :
+                ShaderSource.substr(NextLinePos, Pos - NextLinePos);
         }
-        
+
         return ShaderSources;
     }
 
@@ -137,7 +138,23 @@ namespace Snowflake
             glShaderSource(ShaderHandle, 1, &ShaderSourceCStr, 0);
             glCompileShader(ShaderHandle);
 
-            // TODO: (YoArchh) Check for shader compilication errors
+            // Check if the shader compiled successfully. If there are compilation errors, we log them.
+            GLint WasShaderCompilationSuccessful = 0;
+            glGetShaderiv(ShaderHandle, GL_COMPILE_STATUS, &WasShaderCompilationSuccessful);
+            if (WasShaderCompilationSuccessful == GL_FALSE)
+            {
+                GLint MaxLength = 0;
+                glGetShaderiv(ShaderHandle, GL_INFO_LOG_LENGTH, &MaxLength);
+
+                std::vector<GLchar> ShaderInfoLog(MaxLength);
+                glGetShaderInfoLog(ShaderHandle, MaxLength, &MaxLength, &ShaderInfoLog[0]);
+
+                glDeleteShader(ShaderHandle);
+
+                ENGINE_LOG_ERROR_TAG("Renderer", "Failed to compile shader '{}'!", m_Name);
+                ENGINE_LOG_ERROR_TAG("Renderer", "Shader Error: {}", ShaderInfoLog.data());
+                break;
+            }
 
             glAttachShader(ShaderProgram, ShaderHandle);
             GLShaderIDs[GLShaderIDIndex++] = ShaderHandle;
@@ -147,7 +164,25 @@ namespace Snowflake
 
         glLinkProgram(ShaderProgram);
 
-        // TODO: (YoArchh) Check for shader program linking errors.
+        GLint IsShaderProgramLinked = 0;
+        glGetProgramiv(ShaderProgram, GL_LINK_STATUS, &IsShaderProgramLinked);
+        if (IsShaderProgramLinked == GL_FALSE)
+        {
+            GLint MaxLength = 0;
+            glGetProgramiv(ShaderProgram, GL_INFO_LOG_LENGTH, &MaxLength);
+
+            std::vector<GLchar> ProgramInfoLog(MaxLength);
+            glGetProgramInfoLog(ShaderProgram, MaxLength, &MaxLength, &ProgramInfoLog[0]);
+
+            glDeleteProgram(ShaderProgram);
+
+            for (auto ShaderID : GLShaderIDs)
+                glDeleteShader(ShaderID);
+
+            ENGINE_LOG_ERROR_TAG("Renderer", "Failed to link shader program!");
+            ENGINE_LOG_ERROR_TAG("Renderer", "Link Error: {}", ProgramInfoLog.data());
+            return;
+        }
 
         for (auto ShaderID : GLShaderIDs)
         {
