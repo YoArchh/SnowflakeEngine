@@ -21,6 +21,8 @@
 
 #include "Runtime/Core/Assertion.h"
 
+#include "Runtime/Core/CoreTypes.h"
+
 #ifdef SNOWFLAKE_PLATFORM_WIN64
     #include <windows.h>
     #include <winuser.h>
