@@ -9,11 +9,6 @@ namespace Snowflake
     public:
         SnowflakeEditorLayer()
             : Layer("Snowflake Editor") {}
-
-        void OnAttach() override
-        {
-            CLIENT_LOG_INFO("Hello from '{}' Layer!", m_Name);
-        }
     };
     
     class SnowflakeEditorApp : public Application

@@ -76,10 +76,8 @@ namespace Snowflake
                 m_WindowData.Title.c_str(), nullptr, nullptr);
         }
 
-        glfwMakeContextCurrent(m_WindowHandle);
-
-        int GladInitSuccess = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
-        ENGINE_ASSERT(GladInitSuccess, "Failed to create window '" + m_WindowData.Title + "'! Failed to create OpenGL context!")
+        m_RendererContext = RendererContext::CreateContext(m_WindowHandle);
+        m_RendererContext->Initialize();
         
         SetVSync(m_Specification.bEnableVSync);
         
@@ -244,7 +242,7 @@ namespace Snowflake
 
     void WindowsWindow::SwapBuffers()
     {
-        glfwSwapBuffers(m_WindowHandle);
+        m_RendererContext->SwapBuffers();
     }
 
     Pair<float, float> WindowsWindow::GetPosition() const

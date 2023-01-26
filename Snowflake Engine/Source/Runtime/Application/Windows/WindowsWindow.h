@@ -2,6 +2,8 @@
 
 #include "Application/Window.h"
 
+#include "Renderer/RendererContext.h"
+
 struct GLFWwindow;
 
 namespace Snowflake
@@ -56,6 +58,9 @@ namespace Snowflake
         };
         
         static GLFWwindow* m_WindowHandle;
+
+        Scope<RendererContext> m_RendererContext;
+        
         WindowSpecification m_Specification;
         WindowData m_WindowData;
     };
