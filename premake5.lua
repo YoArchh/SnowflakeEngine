@@ -58,6 +58,7 @@ group "Core"
             "%{IncludeDir.spdlog}",
             "%{IncludeDir.GLFW}",
             "%{IncludeDir.Glad}",
+            "%{IncludeDir.glm}",
             "%{IncludeDir.ImGui}",
             "%{IncludeDir.stb_image}"
         }
@@ -136,10 +137,10 @@ group "Tools"
             
             "Snowflake Engine/Source",
             "Snowflake Engine/Source/Runtime",
-            "Snowflake Engine/Source/Runtime/Core",
             
             "%{IncludeDir.spdlog}",
-            "%{IncludeDir.ImGui}"
+            "%{IncludeDir.ImGui}",
+            "%{IncludeDir.glm}"
         }
 
         links

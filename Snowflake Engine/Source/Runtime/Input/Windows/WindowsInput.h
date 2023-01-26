@@ -13,7 +13,7 @@ namespace Snowflake
         virtual bool GetMouseButtonDown_Implementation(MouseButton InMouseButton) override;
         virtual bool GetMouseButtonUp_Implementation(MouseButton InMouseButton) override;
 
-        virtual Vector2 GetMousePosition_Implementation() override;
+        virtual glm::vec2 GetMousePosition_Implementation() override;
 
         virtual bool GetGamepadButtonDown_Implementation(GamepadID InGamepadID, GamepadButton InGamepadButton) override;
 

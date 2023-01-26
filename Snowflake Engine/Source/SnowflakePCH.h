@@ -21,9 +21,6 @@
 
 #include "Runtime/Core/Assertion.h"
 
-/* -- Math -- */
-#include "Runtime/Core/Math/Vector2.h"
-
 #ifdef SNOWFLAKE_PLATFORM_WIN64
     #include <windows.h>
     #include <winuser.h>

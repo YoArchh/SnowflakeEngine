@@ -35,7 +35,7 @@ namespace Snowflake
         return glfwGetMouseButton(Window, InMouseButton.GetValue()) == GLFW_RELEASE;
     }
 
-    Vector2 WindowsInput::GetMousePosition_Implementation()
+    glm::vec2 WindowsInput::GetMousePosition_Implementation()
     {
         auto* Window = static_cast<GLFWwindow*>(Application::GetInstance().GetWindow().GetHandle());
         double XPos, YPos;
