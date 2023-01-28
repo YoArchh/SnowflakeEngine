@@ -13,7 +13,11 @@ namespace Snowflake
         virtual void Bind() const override;
         virtual void Unbind() const override;
 
+        virtual const BufferLayout& GetBufferLayout() const override { return m_BufferLayout; }
+        virtual void SetBufferLayout(const BufferLayout& InBufferLayout) override { m_BufferLayout = InBufferLayout; }
+        
     private:
         uint32_t m_VertexBufferHandle;
+        BufferLayout m_BufferLayout;
     };
 }

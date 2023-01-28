@@ -1,7 +1,5 @@
 ﻿#include "Application/ApplicationEntryPoint.h"
 
-#include <imgui.h>
-
 namespace Snowflake
 {
     class SnowflakeEditorLayer : public Layer

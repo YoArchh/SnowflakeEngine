@@ -31,6 +31,36 @@ namespace Snowflake
         PushOverlay(m_ImGuiLayer);
         
         Input::Initialize();
+
+        // Render a triangle
+        float Vertices[9] =
+        {
+            -0.5f, -0.5f, 0.0f,
+             0.5f, -0.5f, 0.0f,
+             0.0f,  0.5f, 0.0f
+        };
+
+        uint32_t Indices[3] =
+        {
+            0, 1, 2
+        };
+
+        BufferLayout VertexBufferLayout =
+        {
+            { ShaderDataType::Float3, "a_Position" }
+        };
+
+        m_Shader = Shader::CreateShader("Resources/Shaders/DefaultShader.glsl");
+        
+        m_VertexArray = VertexArray::CreateVertexArray();
+
+        m_VertexBuffer = VertexBuffer::CreateVertexBuffer(Vertices, sizeof(Vertices));
+        m_VertexBuffer->SetBufferLayout(VertexBufferLayout);
+
+        m_IndexBuffer = IndexBuffer::CreateIndexBuffer(Indices, sizeof(Indices));
+
+        m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+        m_VertexArray->SetIndexBuffer(m_IndexBuffer);
     }
 
     Application::~Application()
@@ -59,6 +89,10 @@ namespace Snowflake
 
             if (!bIsWindowMinimized)
             {
+                m_Shader->Bind();
+                m_VertexArray->Bind();
+                glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+                
                 /*----------------*/
                 /* -- Updating -- */
                 /*----------------*/
@@ -117,6 +151,7 @@ namespace Snowflake
     {
         EventDispatcher Dispatcher(InEvent);
         Dispatcher.Dispatch<WindowCloseEvent>([this](WindowCloseEvent& Event) { return OnWindowClose(Event); });
+        Dispatcher.Dispatch<WindowResizeEvent>([this](WindowResizeEvent& Event) { return OnWindowResize(Event); });
         Dispatcher.Dispatch<WindowMinimizeEvent>([this](WindowMinimizeEvent& Event) { return OnWindowMinimize(Event); });
         
         for (auto Iterator = m_LayerStack.end(); Iterator != m_LayerStack.begin(); )
@@ -161,6 +196,13 @@ namespace Snowflake
     bool Application::OnWindowClose(WindowCloseEvent& Event)
     {
         Close();
+
+        return true;
+    }
+
+    bool Application::OnWindowResize(WindowResizeEvent& Event)
+    {
+        glViewport(0, 0, Event.GetWindowWidth(), Event.GetWindowHeight());
 
         return true;
     }
