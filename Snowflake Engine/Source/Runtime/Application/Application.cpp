@@ -7,6 +7,8 @@
 
 #include "Input/Input.h"
 
+#include "Renderer/Renderer.h"
+
 #include <glad/glad.h>
 
 extern bool bIsApplicationRunning;
@@ -31,6 +33,8 @@ namespace Snowflake
         PushOverlay(m_ImGuiLayer);
         
         Input::Initialize();
+
+        Renderer::Initialize();
 
         // Render a triangle
         float Vertices[9] =
@@ -83,16 +87,12 @@ namespace Snowflake
         while (bIsRunning)
         {
             ProcessEvents();
-            
-            glClearColor(0.45f, 0.55f, 0.65f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
+
+            Renderer::ClearColor(0.45f, 0.55f, 0.65f, 1.0f);
+            Renderer::Clear(BufferMask::ColorAndDepth);
 
             if (!bIsWindowMinimized)
             {
-                m_Shader->Bind();
-                m_VertexArray->Bind();
-                glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-                
                 /*----------------*/
                 /* -- Updating -- */
                 /*----------------*/
@@ -106,6 +106,10 @@ namespace Snowflake
                 /* -- Rendering -- */
                 /*-----------------*/
 
+                m_Shader->Bind();
+                m_VertexArray->Bind();
+                Renderer::DrawIndexed(3, PrimitiveType::Triangles);
+                
                 m_ImGuiLayer->Begin();
 
                 for (Layer* InLayer : m_LayerStack)

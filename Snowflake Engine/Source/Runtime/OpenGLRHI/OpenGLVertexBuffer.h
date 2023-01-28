@@ -17,7 +17,7 @@ namespace Snowflake
         virtual void SetBufferLayout(const BufferLayout& InBufferLayout) override { m_BufferLayout = InBufferLayout; }
         
     private:
-        uint32_t m_VertexBufferHandle;
+        uint32_t m_VertexBufferHandle = 0;
         BufferLayout m_BufferLayout;
     };
 }
