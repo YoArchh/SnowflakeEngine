@@ -4,7 +4,7 @@
 
 namespace Snowflake
 {
-    class OpenGLRendererAPI : public RendererAPI
+    class OpenGLRenderer : public RendererAPI
     {
     public:
         virtual void Initialize() override;

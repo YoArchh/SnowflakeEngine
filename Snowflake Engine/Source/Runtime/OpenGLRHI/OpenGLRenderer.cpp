@@ -1,5 +1,5 @@
 ﻿#include "SnowflakePCH.h"
-#include "OpenGLRendererAPI.h"
+#include "OpenGLRenderer.h"
 
 #include <glad/glad.h>
 
@@ -29,7 +29,7 @@ namespace Snowflake
         }
     }
     
-    void OpenGLRendererAPI::Initialize()
+    void OpenGLRenderer::Initialize()
     {
         #ifdef SNOWFLAKE_BUILD_DEBUG
             glDebugMessageCallback(DebugMessageCallback, nullptr);
@@ -40,7 +40,7 @@ namespace Snowflake
         glEnable(GL_DEPTH_TEST);
     }
 
-    void OpenGLRendererAPI::Clear(BufferMask InBufferMask)
+    void OpenGLRenderer::Clear(BufferMask InBufferMask)
     {
         switch (InBufferMask)
         {
@@ -67,12 +67,12 @@ namespace Snowflake
         }
     }
 
-    void OpenGLRendererAPI::ClearColor(float Red, float Green, float Blue, float Alpha)
+    void OpenGLRenderer::ClearColor(float Red, float Green, float Blue, float Alpha)
     {
         glClearColor(Red, Green, Blue, Alpha);
     }
 
-    void OpenGLRendererAPI::DrawIndexed(uint32_t Count, PrimitiveType DrawType, bool bDepthTest)
+    void OpenGLRenderer::DrawIndexed(uint32_t Count, PrimitiveType DrawType, bool bDepthTest)
     {
         GLenum GLPrimitiveType = 0;
         
