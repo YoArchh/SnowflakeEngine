@@ -86,7 +86,7 @@ namespace Snowflake
     void OpenGLShader::SetMatrix4(const std::string& UniformName, const glm::mat4& Value)
     {
         int UniformLocation = glGetUniformLocation(m_ShaderProgram, UniformName.c_str());
-        glUniformMatrix3fv(UniformLocation, 1, GL_FALSE, glm::value_ptr(Value));
+        glUniformMatrix4fv(UniformLocation, 1, GL_FALSE, glm::value_ptr(Value));
     }
 
     /*-------------------------*/

@@ -54,6 +54,7 @@ group "Core"
         {
             "%{prj.name}/Source",
             "%{prj.name}/Source/Runtime",
+            "%{prj.name}/Source/Runtime/GameCore",
             
             "%{IncludeDir.spdlog}",
             "%{IncludeDir.GLFW}",

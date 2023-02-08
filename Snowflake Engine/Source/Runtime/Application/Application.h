@@ -10,11 +10,6 @@
 
 #include "ImGui/ImGuiLayer.h"
 
-#include "Renderer/Shader.h"
-#include "Renderer/VertexArray.h"
-#include "Renderer/VertexBuffer.h"
-#include "Renderer/IndexBuffer.h"
-
 #include <string>
 #include <mutex>
 #include <queue>
@@ -101,11 +96,6 @@ namespace Snowflake
         static Application* s_Instance;
 
         Scope<Window> m_ApplicationWindow;
-
-        Ref<Shader> m_Shader;
-        Ref<VertexArray> m_VertexArray;
-        Ref<VertexBuffer> m_VertexBuffer;
-        Ref<IndexBuffer> m_IndexBuffer;
 
         ImGuiLayer* m_ImGuiLayer;
 

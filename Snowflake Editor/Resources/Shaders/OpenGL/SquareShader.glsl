@@ -1,7 +1,9 @@
-﻿#type vertex
+#type vertex
 #version 460 core
 
 layout(location = 0) in vec3 a_Position;
+
+uniform mat4 u_ViewProjectionMatrix;
 
 out vec3 v_Position;
 
@@ -9,7 +11,7 @@ void main()
 {
     v_Position = a_Position;
     
-    gl_Position = vec4(a_Position, 1.0);
+    gl_Position = u_ViewProjectionMatrix * vec4(a_Position, 1.0);
 }
 
 #type fragment
@@ -21,5 +23,5 @@ in vec3 v_Position;
 
 void main()
 {
-    o_FragmentColor = vec4(v_Position * 0.5 + 0.9, 1.0);
+    o_FragmentColor = vec4(v_Position * 0.5 + 0.7, 1.0);
 }

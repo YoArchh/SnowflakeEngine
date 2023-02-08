@@ -35,36 +35,6 @@ namespace Snowflake
         Input::Initialize();
 
         Renderer::Initialize();
-
-        // Render a triangle
-        float Vertices[9] =
-        {
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.0f,  0.5f, 0.0f
-        };
-
-        uint32_t Indices[3] =
-        {
-            0, 1, 2
-        };
-
-        BufferLayout VertexBufferLayout =
-        {
-            { ShaderDataType::Float3, "a_Position" }
-        };
-
-        m_Shader = Shader::CreateShader("Resources/Shaders/DefaultShader.glsl");
-        
-        m_VertexArray = VertexArray::CreateVertexArray();
-
-        m_VertexBuffer = VertexBuffer::CreateVertexBuffer(Vertices, sizeof(Vertices));
-        m_VertexBuffer->SetBufferLayout(VertexBufferLayout);
-
-        m_IndexBuffer = IndexBuffer::CreateIndexBuffer(Indices, sizeof(Indices));
-
-        m_VertexArray->AddVertexBuffer(m_VertexBuffer);
-        m_VertexArray->SetIndexBuffer(m_IndexBuffer);
     }
 
     Application::~Application()
@@ -105,10 +75,6 @@ namespace Snowflake
                 /*-----------------*/
                 /* -- Rendering -- */
                 /*-----------------*/
-
-                m_Shader->Bind();
-                m_VertexArray->Bind();
-                Renderer::DrawIndexed(3, PrimitiveType::Triangles);
                 
                 m_ImGuiLayer->Begin();
 

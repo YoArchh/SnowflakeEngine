@@ -50,12 +50,6 @@ namespace Snowflake
         ImGui::DestroyContext();
     }
 
-    void ImGuiLayerOpenGL::OnUIRender()
-    {
-        static bool bShowDemoWindow = true;
-        ImGui::ShowDemoWindow(&bShowDemoWindow);
-    }
-
     void ImGuiLayerOpenGL::Begin()
     {
         ImGui_ImplOpenGL3_NewFrame();
