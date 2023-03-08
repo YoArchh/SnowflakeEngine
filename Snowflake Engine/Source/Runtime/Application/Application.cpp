@@ -9,7 +9,10 @@
 
 #include "Renderer/Renderer.h"
 
+#include "GLFW/glfw3.h" // TODO: REMOVE!
 #include <glad/glad.h>
+
+#include <glm/glm.hpp>
 
 extern bool bIsApplicationRunning;
 
@@ -23,7 +26,7 @@ namespace Snowflake
         s_Instance = this;
         
         LoggingSystem::Initialize();
-
+        
         m_ApplicationWindow = Window::CreateWindow();
         m_ApplicationWindow->Initialize();
         m_ApplicationWindow->SetEventCallbackFunction([this](Event& InEvent) { OnEvent(InEvent); });
@@ -70,6 +73,12 @@ namespace Snowflake
                 for (Layer* InLayer : m_LayerStack)
                     InLayer->OnUpdate();
 
+                if (m_DeltaTime >= 0.0f)
+                {
+                    for (Layer* InLayer : m_LayerStack)
+                        InLayer->OnFixedUpdate(m_DeltaTime);
+                }
+
                 DispatchEvent<ApplicationUpdateEvent, true>(m_Specification.Name);
 
                 /*-----------------*/
@@ -96,6 +105,12 @@ namespace Snowflake
             
                 DispatchEvent<ApplicationTickEvent, true>(m_Specification.Name);
             }
+
+            // FIXME: Should be platform-agnostic.
+            float Time = static_cast<float>(glfwGetTime());
+            m_Frametime = Time - m_LastFrameTime;
+            m_DeltaTime = glm::min<float>(m_Frametime, 0.0333f);
+            m_LastFrameTime = Time;
         }
 
         OnShutdown();

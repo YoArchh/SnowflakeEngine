@@ -13,6 +13,7 @@ namespace Snowflake
         virtual void OnAttach() {}
         virtual void OnDetach() {}
         virtual void OnUpdate() {}
+        virtual void OnFixedUpdate(float DeltaTime) {}
         virtual void OnTick() {}
         virtual void OnUIRender() {}
         virtual void OnEvent(Event& InEvent) {}

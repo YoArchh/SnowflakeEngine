@@ -83,6 +83,10 @@ namespace Snowflake
 
         Window& GetWindow() { return *m_ApplicationWindow; }
 
+        float GetDeltaTime() const { return m_DeltaTime; }
+
+        float GetFrametime() const { return m_Frametime; }
+
         bool IsRunning() { return bIsRunning; }
 
     private:
@@ -105,6 +109,10 @@ namespace Snowflake
         
         ApplicationSpecification m_Specification;
         LayerStack m_LayerStack;
+
+        float m_DeltaTime = 0.0f;
+        float m_Frametime = 0.0f;
+        float m_LastFrameTime = 0.0f;
         
         bool bIsWindowMinimized = false;
         bool bIsRunning = true;
